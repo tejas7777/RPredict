@@ -1,0 +1,100 @@
+# # Getting AMAZON stock dataset and loading the needed packages
+if(!require(quantmod)) install.packages("quantmod")
+if(!require(forecast)) install.packages("forecast")
+# # if(!require(xlsx)) install.packages("xlsx")
+# if(!require(tseries)) install.packages("tseries")
+# if(!require(timeSeries)) install.packages("timeSeries")
+# if(!require(dplyr)) install.packages("dplyr")
+# if(!require(fGarch)) install.packages("fGarch")
+# # if(!require(prophet)) install.packages("prophet")
+# # library(prophet)
+# library(quantmod)
+# library(forecast)
+# # library("xlsx")
+# library(tseries)
+# library(timeSeries)
+# library(dplyr)
+# library(fGarch)
+# 
+# ######    MSFT     ##############################################################################
+# getSymbols("MSFT")
+# summary(MSFT)
+# myTheme <- chart_theme()
+# myTheme$col$`bg` <- "white"
+# chartSeries(MSFT, subset = 'last 12 months',theme=myTheme)
+# addBBands()
+# adf.test(MSFT$MSFT.Adjusted)
+# ret_MSFT <- 100*diff(log(MSFT$MSFT.Adjusted[2274:2638]))
+# MSFT_ret_train <- ret_MSFT[1:(0.9*length(ret_MSFT))]
+# MSFT_ret_test <- ret_MSFT[(0.9*length(ret_MSFT)+1):length(ret_MSFT)]
+# fit <- Arima(MSFT_ret_train, order = c(2,0,2))
+# preds <- predict(fit, n.ahead = (length(ret_MSFT) - (0.9*length(ret_MSFT))))$pred
+# test_forecast <- forecast(fit,h = 25)
+# plot(test_forecast, main = "Arima forecast for Microsoft Stock")
+# 
+# 
+# ######     AMZN     #################################################################################
+# getSymbols("AMZN")
+# summary(AMZN)
+# myTheme <- chart_theme()
+# myTheme$col$`bg` <- "white"
+# chartSeries(AMZN, subset = 'last 12 months',theme=myTheme)
+# addBBands()
+# adf.test(AMZN$AMZN.Adjusted)
+# ret_AMZN <- 100*diff(log(AMZN$AMZN.Adjusted[2274:2638]))
+# AMZN_ret_train <- ret_AMZN[1:(0.9*length(ret_AMZN))]
+# AMZN_ret_test <- ret_AMZN[(0.9*length(ret_AMZN)+1):length(ret_AMZN)]
+# fit <- Arima(AMZN_ret_train, order = c(2,0,2))
+# preds <- predict(fit, n.ahead = (length(ret_AMZN) - (0.9*length(ret_AMZN))))$pred
+# test_forecast <- forecast(fit,h = 25)
+# plot(test_forecast, main = "Arima forecast for Amazon")
+
+# 
+# ARIMA <-function(ticker){
+#   indf_data <- getSymbols(Symbols = ticker, src = "yahoo", from = Sys.Date() - 1953, 
+#                           to = Sys.Date(), auto.assign = FALSE)
+#   
+#   indf_data <- Cl(indf_data)
+#   chart_Series(indf_data, col = "black")
+#   add_SMA(n = 100, on = 1, col = "red")
+#   add_SMA(n = 20, on = 1, col = "black")
+#   add_RSI(n = 14, maType = "SMA")
+#   add_BBands(n = 20, maType = "SMA", sd = 1, on = -1)
+#   add_MACD(fast = 12, slow = 25, signal = 9, maType = "SMA", histogram = TRUE)
+#   ### Log tranformation stock data
+#   indf_log <- log(indf_data)
+#   head(indf_log, n = 10)
+#   plot(indf_log, main = "log indf_data chart")
+#   acf_log <- acf(indf_log, lag.max = 320)
+#   pacf_log <- pacf(indf_log, lag.max = 320)
+# }
+#   
+ARIMAModel <- function(ticker){
+  indf_data <- getSymbols(Symbols = ticker, src = "yahoo", from = Sys.Date() - 1953, 
+                          to = Sys.Date(), auto.assign = FALSE)
+  
+  indf_data <- Cl(indf_data)
+  
+  library(caTools)c
+  train_data <- indf_data[1:1270]
+  
+  library(forecast)
+  set.seed(123)
+  arima_model <- auto.arima(train_data, stationary = TRUE, i = c("aicc", "aic", "bic"), 
+                            trace = TRUE)
+  
+  summary(arima_model) ###summary for choosen best arima(p,d,q) model
+  
+  checkresiduals(arima_model) ###diagnostic cheking
+  
+  arima <- arima(train_data, order = c(1, 1, 0))
+  summary(arima)
+  
+  forecast1 <- forecast(arima, h = 100)
+  plot(forecast1)
+  
+}
+
+#ARIMA("AMZN")
+
+ARIMAModel("TSLA")

@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1621517392590.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1736312074",
+    "id" : "30C7050B",
+    "lastKnownWriteTime" : 1621518528,
+    "last_content_update" : 1621518528928,
+    "path" : "~/r-arima/app.r",
+    "project_path" : "app.r",
+    "properties" : {
+        "cursorPosition" : "89,48",
+        "scrollLine" : "76",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
